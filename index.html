@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>For My Bestie Gayatri ❤️</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', cursive, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e50914, #ff416c);
+      color: #ffffff;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .music-btn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 999;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(5px);
+      border: 2px solid #fff;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .floating-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .floating-item {
+      position: absolute;
+      bottom: -50px;
+      font-size: 24px;
+      animation: floatUp 8s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      padding: 15px;
+      z-index: 2;
+    }
+
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn-next, .btn-back {
+      background-color: #ffffff;
+      color: #e50914;
+      border: 2px solid #ffffff;
+      padding: 10px 22px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+      margin-top: 15px;
+    }
+
+    .btn-next:active, .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    .passcode-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .polaroid-frame {
+      background: #ffffff;
+      padding: 10px 10px 25px 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transform: rotate(-3deg);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .polaroid-frame img {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .polaroid-frame .caption {
+      color: #333;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .pin-dots {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+
+    .dot.filled {
+      background-color: white;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .key {
+      width: 48px;
+      height: 48px;
+      background: white;
+      color: #e50914;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .key:active {
+      background: #ffd1d1;
+    }
+
+    .title-intro {
+      font-size: 26px;
+      text-align: center;
+      animation: pulseTitle 2s infinite alternate;
+      line-height: 1.4;
+    }
+
+    @keyframes pulseTitle {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1.05); }
+    }
+
+    .cake-container {
+      position: relative;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .candles-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: -15px;
+      z-index: 3;
+    }
+
+    .candle {
+      width: 12px;
+      height: 45px;
+      background: repeating-linear-gradient(0deg, #fff, #fff 8px, #ff4081 8px, #ff4081 16px);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .flame {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 22px;
+      background: radial-gradient(ellipse at bottom, #ffd700 20%, #ff5722 80%);
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 12px #ffd700;
+      animation: flameAnim 0.4s infinite alternate;
+      transition: opacity 0.5s ease;
+    }
+
+    .flame.out {
+      opacity: 0;
+    }
+
+    @keyframes flameAnim {
+      0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+      100% { transform: translateX(-50%) scale(1.15) rotate(2deg); }
+    }
+
+    .blow-instruction {
+      font-size: 15px;
+      margin-top: 15px;
+      background: rgba(0,0,0,0.2);
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px dashed #fff;
+    }
+
+    /* SLIDE 2-PHOTOS LAYOUT */
+    .photo-slide-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .polaroid-card-slide {
+      background: white;
+      padding: 8px 8px 15px 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      border-radius: 6px;
+      width: 145px;
+      text-align: center;
+      transform: rotate(-2deg);
+    }
+
+    .polaroid-card-slide:nth-child(2) {
+      transform: rotate(2deg);
+    }
+
+    .polaroid-card-slide img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+    }
+
+    .polaroid-card-slide .img-tag {
+      color: #e50914;
+      font-size: 11px;
+      margin-top: 6px;
+      font-weight: bold;
+      line-height: 1.3;
+    }
+
+    .panda-gif {
+      width: 75px;
+      height: 75px;
+      margin-top: 10px;
+      border-radius: 50%;
+    }
+
+    /* LETTER CARD SPACING FIX */
+    .letter-card {
+      background: #ffffff;
+      color: #333;
+      padding: 22px 18px;
+      border-radius: 14px;
+      max-width: 330px;
+      width: 90vw;
+      max-height: 52vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      font-size: 15px;
+      line-height: 1.8;
+      word-wrap: break-word;
+      text-align: left;
+    }
+
+    .letter-card p {
+      margin-bottom: 16px; /* CLEAR PARAGRAPH SPACING */
+      display: block;
+    }
+
+    .surprise-card {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 30px 20px;
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      max-width: 320px;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=happy-birthday-115328.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-btn" onclick="toggleMusic()">🎵 <span id="music-text">Music ON</span></button>
+
+  <div class="floating-container" id="floating-bg"></div>
+
+  <!-- 1. PASSCODE SCREEN -->
+  <div class="screen active" id="screen-passcode">
+    <div class="passcode-container">
+      <div class="polaroid-frame">
+        <img src="img1.jpg" alt="Gayatri" onerror="this.src='https://via.placeholder.com/140?text=Gayatri+❤️'" />
+        <div class="caption">For Gayatri ❤️</div>
+      </div>
+      <h2 style="font-size:18px;">Enter Passcode</h2>
+      <div class="pin-dots">
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+        <div class="dot" id="dot4"></div>
+      </div>
+      <div class="keypad">
+        <div class="key" onclick="pressKey('1')">1</div>
+        <div class="key" onclick="pressKey('2')">2</div>
+        <div class="key" onclick="pressKey('3')">3</div>
+        <div class="key" onclick="pressKey('4')">4</div>
+        <div class="key" onclick="pressKey('5')">5</div>
+        <div class="key" onclick="pressKey('6')">6</div>
+        <div class="key" onclick="pressKey('7')">7</div>
+        <div class="key" onclick="pressKey('8')">8</div>
+        <div class="key" onclick="pressKey('9')">9</div>
+        <div></div>
+        <div class="key" onclick="pressKey('0')">0</div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. OPENING ANIMATION SCREEN -->
+  <div class="screen" id="screen-intro">
+    <h1 class="title-intro">❤️ For My Bestie Gayatri ❤️</h1>
+    <p style="margin-top: 15px; opacity: 0.9;">A small surprise created with lots of love... ✨</p>
+    <br/>
+    <button class="btn-next" onclick="goToScreen('screen-cake')">LET'S CELEBRATE 🎉</button>
+  </div>
+
+  <!-- 3. MAKE A WISH SCREEN -->
+  <div class="screen" id="screen-cake">
+    <h1 id="cake-title" style="font-size: 26px; text-align:center;">✨ Make a Wish ✨</h1>
+    
+    <div class="cake-container" id="cake-area">
+      <div class="candles-group">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+      </div>
+
+      <svg width="220" height="180" viewBox="0 0 200 160">
+        <path d="M 20 90 Q 100 70 180 90 L 180 145 Q 100 165 20 145 Z" fill="#ff80ab" />
+        <path d="M 20 90 Q 100 110 180 90 L 180 70 Q 100 50 20 70 Z" fill="#ff4081" />
+        <path d="M 20 70 Q 30 85 40 70 Q 50 85 60 70 Q 70 85 80 70 Q 90 85 100 70 Q 110 85 120 70 Q 130 85 140 70 Q 150 85 160 70 Q 170 85 180 70" fill="none" stroke="#ffffff" stroke-width="6" />
+      </svg>
+    </div>
+
+    <p class="blow-instruction" id="blow-hint">👉 Tap on the cake to blow candles! 💨</p>
+    <br/>
+    <button class="btn-next" id="after-blow-btn" style="display:none;" onclick="goToScreen('screen-photo1')">SEE MEMORIES 📸</button>
+  </div>
+
+  <!-- 4. GALLERY SLIDE 1 (2 Photos) -->
+  <div class="screen" id="screen-photo1">
+    <h2 style="font-size: 20px;">Sweet Beginnings 🌸 (1/3)</h2>
+    <div class="photo-slide-container">
+      <div class="polaroid-card-slide">
+        <img src="img1.jpg" alt="Memory 1" onerror="this.src='https://via.placeholder.com/140?text=Photo+1'" />
+        <div class="img-tag">You bring magic into my world ✨</div>
+      </div>
+      <div class="polaroid-card-slide">
+        <img src="img2.jpg" alt="Memory 2" onerror="this.src='https://via.placeholder.com/140?text=Photo+2'" />
+        <div class="img-tag">Your smile makes everything bright 💖</div>
+      </div>
+    </div>
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z0bjJveTRoMm82ZGNwNmRkYmg5am9uMndsaHN3NDRrdHRidms1eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lq0h93752f6J9tijrh/giphy.gif" class="panda-gif" alt="Cute Panda" />
+    <button class="btn-next" onclick="goToScreen('screen-photo2')">Next Memories ➡️</button>
+  </div>
+
+  <!-- 5. GALLERY SLIDE 2 (2 Photos) -->
+  <div class="screen" id="screen-photo2">
+    <h2 style="font-size: 20px;">Unbreakable Bond 🤝 (2/3)</h2>
+    <div class="photo-slide-container">
+      <div class="polaroid-card-slide">
+        <img src="img3.jpg" alt="Memory 3" onerror="this.src='https://via.placeholder.com/140?text=Photo+3'" />
+        <div class="img-tag">My purest & favourite human ❤️</div>
+      </div>
+      <div class="polaroid-card-slide">
+        <img src="img4.jpg" alt="Memory 4" onerror="this.src='https://via.placeholder.com/140?text=Photo+4'" />
+        <div class="img-tag">Life is so much better with you 🌸</div>
+      </div>
+    </div>
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTY4cGFscGczMHM5aGgyMjhndDljbjRsbmtjNXN0Y2w3cXA1bDFzZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/EatwJZRUIv41G/giphy.gif" class="panda-gif" alt="Cute Panda" />
+    <button class="btn-next" onclick="goToScreen('screen-photo3')">Next Memories ➡️</button>
+  </div>
+
+  <!-- 6. GALLERY SLIDE 3 (2 Photos) -->
+  <div class="screen" id="screen-photo3">
+    <h2 style="font-size: 20px;">Forever Besties ♾️ (3/3)</h2>
+    <div class="photo-slide-container">
+      <div class="polaroid-card-slide">
+        <img src="img5.jpg" alt="Memory 5" onerror="this.src='https://via.placeholder.com/140?text=Photo+5'" />
+        <div class="img-tag">Never change yourself for anyone 👑</div>
+      </div>
+      <div class="polaroid-card-slide">
+        <img src="img6.jpg" alt="Memory 6" onerror="this.src='https://via.placeholder.com/140?text=Photo+6'" />
+        <div class="img-tag">I'll always be by your side 💕</div>
+      </div>
+    </div>
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWZreHFpcnN1Y3Mxb28yMGkzdmd1Nmh0NDBrc2I4dzY4M2Z4amRhYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kZqbBT64ECtjy/giphy.gif" class="panda-gif" alt="Cute Panda" />
+    <button class="btn-next" onclick="openLetterScreen()">READ MY LETTER 💌</button>
+  </div>
+
+  <!-- 7. TYPING LETTER SCREEN WITH SPACING -->
+  <div class="screen" id="screen-letter">
+    <div class="polaroid-card-slide" style="margin-bottom: 10px; width: 110px;">
+      <img src="img3.jpg" alt="Gayatri" onerror="this.src='https://via.placeholder.com/110?text=Gayatri'" style="height: 100px;" />
+    </div>
+
+    <div class="letter-card" id="letter-box">
+      <div id="typed-container"></div>
+    </div>
+
+    <button class="btn-next" id="surprise-btn" style="display:none;" onclick="goToScreen('screen-surprise')">One Final Surprise... 🎁</button>
+  </div>
+
+  <!-- 8. FINAL SURPRISE SCREEN -->
+  <div class="screen" id="screen-surprise">
+    <div class="surprise-card">
+      <h1 style="font-size: 40px; margin-bottom: 10px;">🎂👑</h1>
+      <h2>Always Stay Happy!</h2>
+      <p style="margin-top: 12px; font-size: 14px; opacity: 0.95;">May your year ahead be filled with endless smiles, magic, and success. Happy Birthday once again, Gayatri! ✨</p>
+    </div>
+    <button class="btn-next" onclick="goToScreen('screen-cake')">Back to Cake 🎂</button>
+  </div>
+
+  <script>
+    const audio = document.getElementById('bg-music');
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        audio.pause();
+        document.getElementById('music-text').innerText = 'Music OFF';
+      } else {
+        audio.play().catch(() => {});
+        document.getElementById('music-text').innerText = 'Music ON';
+      }
+      isPlaying = !isPlaying;
+    }
+
+    function goToScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    const bg = document.getElementById('floating-bg');
+    const items = ['🌸', '💖', '✨', '🌺', '💕'];
+    for (let i = 0; i < 20; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-item';
+      el.innerText = items[Math.floor(Math.random() * items.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDelay = Math.random() * 8 + 's';
+      el.style.animationDuration = (6 + Math.random() * 6) + 's';
+      bg.appendChild(el);
+    }
+
+    let currentPin = '';
+    const correctPin = '0110';
+
+    function pressKey(num) {
+      if (!isPlaying) { toggleMusic(); }
+      if (currentPin.length < 4) {
+        currentPin += num;
+        updateDots();
+        if (currentPin.length === 4) {
+          setTimeout(() => {
+            if (currentPin === correctPin) {
+              goToScreen('screen-intro');
+            } else {
+              alert('Wrong PIN! Try 0110');
+            }
+            currentPin = '';
+            updateDots();
+          }, 200);
+        }
+      }
+    }
+
+    function updateDots() {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`dot${i}`).classList.toggle('filled', i <= currentPin.length);
+      }
+    }
+
+    const cakeArea = document.getElementById('cake-area');
+
+    function blowCandles() {
+      document.querySelectorAll('.flame').forEach(f => f.classList.add('out'));
+      document.getElementById('cake-title').innerText = '🎉 Happy Birthday Gayatri! 🎉';
+      document.getElementById('blow-hint').innerText = '✨ Wish granted! ✨';
+      document.getElementById('after-blow-btn').style.display = 'inline-block';
+      
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      setTimeout(() => {
+        confetti({ particleCount: 150, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 150, angle: 120, spread: 55, origin: { x: 1 } });
+      }, 400);
+    }
+
+    cakeArea.addEventListener('click', blowCandles);
+
+    // LETTER WITH PROPER PARAGRAPHS AND SPACING
+    const letterParagraphs = [
+      "Dearest Gayatri, ❤️",
+      "Happy Birthday to my absolute favourite person in the entire world! 🌸",
+      "You are so incredibly kind, sweet, and pure-hearted. Thank you for always being there for me, even during my hardest times. Having you in my life is a true blessing.",
+      "You've been such a special part of my memory... and I hope we share countless more moments, laughs, and craziness together in the future! ✨",
+      "Always stay as smiling and happy as you are today. Happy Birthday once again, my bestie! ♥️"
+    ];
+
+    function openLetterScreen() {
+      goToScreen('screen-letter');
+      const container = document.getElementById('typed-container');
+      const letterBox = document.getElementById('letter-box');
+      container.innerHTML = '';
+      
+      let pIndex = 0;
+      let charIndex = 0;
+      let currentP = document.createElement('p');
+      container.appendChild(currentP);
+
+      const interval = setInterval(() => {
+        if (pIndex < letterParagraphs.length) {
+          const currentText = letterParagraphs[pIndex];
+          currentP.innerText += currentText[charIndex];
+          charIndex++;
+          letterBox.scrollTop = letterBox.scrollHeight;
+
+          if (charIndex >= currentText.length) {
+            pIndex++;
+            charIndex = 0;
+            if (pIndex < letterParagraphs.length) {
+              currentP = document.createElement('p');
+              container.appendChild(currentP);
+            }
+          }
+        } else {
+          clearInterval(interval);
+          document.getElementById('surprise-btn').style.display = 'inline-block';
+        }
+      }, 35);
+    }
+  </script>
+</body>
+</html>
